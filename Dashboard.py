@@ -45,7 +45,6 @@ class ScrapeBot():
 		print(instagram_return)
 		return instagram_return
 
-
 	def AmazonSeller(self):
 		self.browser.get('https://sellercentral.amazon.com/home')
 		time.sleep(2) #This sleep function insures all elements of the page are loaded before scraping data.
