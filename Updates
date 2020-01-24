@@ -1,0 +1,43 @@
+J Term - Update 1
+
+Bernard Brown
+Business Dashboard
+
+Found a way to log into all of my accounts via a new selenium chrome browser session.
+Details:
+To access all of my information such as my sales, instagram, email list, and website data, one has to be logged into the account. 
+With selenium when you launch a new chrome browser it does not load any of your chrome browser cookies, because it is a brand new 
+session. Therefore I tried the following methods and choose method 3 as my primary procedure to login.
+●	Method 1: The first thing I tried to access my account was to log in via selenium’s send_keys built in function. I would have the 
+script navigate the browser to the desired website and then access the login page. You just need to locate the element(login field) 
+and then click on the element, at that point I was able to use the function to type the user name, once the username was type I sent 
+the TAB key to drop down into the password field and send the password. The final step was hitting the enter key or clicking on the 
+login item. 
+Note: This method of accessing my account information is tedious because I need to write new code for each login function because 
+every website has different html tags and classes.
+●	Method 2: After using method 1 for a while Instagram suspended my account for a couple of hours due to the amount of times I logged 
+in while debugging and building my code. This made me think of a different potential method, saving and loading cookies. I made this 
+work with Pythons pickle library and saved the cookies after the first login, and reloaded them each time I ran my script which 
+eliminated the login process after the first time. 
+Note: This method was great, but resulted in multiple cookie files that had to be loaded each time I ran my script, and if I want to 
+add another website to scrape data off I would need to build another load_cookies and save_cookies functions specific for that 
+website. While doing research I came upon method 3... 
+●	Method 3: This is the primary method of logging into my accounts that I use in my project. Under the webdriver.ChromeOptions() 
+you can add_argument and supply the Chrome browser with the local directory of all your saved Chrome cookies and directly load 
+all of your cookies into the application. That way you are logged into all of your accounts automatically. 
+
+The following sources are the ones I plan to scrape data from:
+●	Amazon Seller
+●	Instagram
+●	Facebook
+●	MailChimp
+●	Google Analytics
+
+I then built the automated solution of gathering the data from each source by using selenium to cycle through and grab the correct 
+data corresponding the the html expaths I described.
+
+I then inserted all of the data in a mysql local database, so that everytime I run my application it stores the data. 
+
+I then built a function to retrieve the data from the sql database and store it as a local variable in Python.
+
+I then built the graphing functions by using Pandas.
