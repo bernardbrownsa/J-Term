@@ -17,3 +17,4 @@ I will develop the following dashboards:
 ●	Sales/Expenses Panel - (I will need to request permission for an API key from Amazon Seller so I can directly link some data or use Selenium and Beautiful Soup to acquire data). This will display relevant data regarding my sales and conversion rates so I can compare graphs from the different panels).
 ●	Email List / Website Views Panel - (This will display the growth of my email lists as well as the engagement on my website) Mail Chimp and Google Analytics has an API which I could possibly connect or I could just scrape it using Python.
 ●	Advertisement Panel (This will display the cost (pay-per-click), impressions, conversions, and any other data that will help make educated decisions.)
+ 
