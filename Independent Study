@@ -1,0 +1,19 @@
+Bernard Brown
+
+Independent Study
+(3 credits for J-term and 1 credit for Spring)
+
+Section I: Student Statement
+
+I have a company called Rhino Wallet that sell compact wallets on Amazon. The company has sold over $12,500 worth of wallets to over 500 people across the country. To optimize my sales, expenses, advertisements, social media and target audiences I will create a series of dashboards. These will display simplified view of company data and algorithm outputs. These dashboards will be built using Python and will be executed and displayed in Jupyter Notebook. Some of this data will be recursive, therefore one (or many) .csv files will be used to store and access data through Python. To acquire the data I will first attempt to use any relevant APIs. If that does not work or is not available I will use Selenium and Beautifulsoup to acquire that data. This application will be designed for the sole use of Rhino Wallet.
+
+I will develop the following dashboards:
+
+●	Social Media Panel - This displays data regarding my social media accounts for Rhino Wallet, so I can make decisions that result in better conversion rates.
+○	Top post for the last 7 days and 30 days
+■	Build an algorithm that will determine this by looking at likes, comments and follows
+○	Highest keyword(hashtag) that Rhino Wallet is ranking for.
+○	Best post description. (To find out whether ‘blog like’ posts, or short and simple posts convert better)
+●	Sales/Expenses Panel - (I will need to request permission for an API key from Amazon Seller so I can directly link some data or use Selenium and Beautiful Soup to acquire data). This will display relevant data regarding my sales and conversion rates so I can compare graphs from the different panels).
+●	Email List / Website Views Panel - (This will display the growth of my email lists as well as the engagement on my website) Mail Chimp and Google Analytics has an API which I could possibly connect or I could just scrape it using Python.
+●	Advertisement Panel (This will display the cost (pay-per-click), impressions, conversions, and any other data that will help make educated decisions.)
