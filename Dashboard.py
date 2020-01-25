@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup as soup
 import time
 import mysql.connector
+import datetime
 
 class ScrapeBot():
 #The purpose of ScrapeBot is to collect the data from each source
@@ -106,13 +107,13 @@ class ScrapeBot():
 		fb_like = ""
 
 		for i in range(0, len(fb_likes)):
-			print(str(fb_likes[i].text))
 			if('like' in str(fb_likes[i].text)):
 				fb_like = fb_likes[i].text
 				fb_like = fb_like[:3]
 				fb_like = fb_like.replace(" ","")
-
-		return fb_like
+		facebook_return = {"Facebook Likes":fb_like}
+		print(facebook_return)
+		return facebook_return
 
 class DataManagement():
 #The purpose of this class is to build the visual representation of the data
@@ -130,7 +131,7 @@ class DataManagement():
 
 		return sql_list
 
-	def InsertDatabase(self, instagram_return, amazonseller_return, mailchimp_return facebook_return):
+	def InsertDatabase(self, instagram_return, amazonseller_return, mailchimp_return, facebook_return):
 		mydb = mysql.connector.connect(
 		  host="localhost",
 		  user="root",
@@ -166,41 +167,47 @@ class DataManagement():
 		subs = subs.replace(',','')
 		subs = float(subs)
 
-		mycursor.execute('INSERT INTO data (monthly_sales,weekly_sales,follower_count,following_count,posts,email_subs) VALUES \
-			("{}","{}","{}","{}","{}","{}");'.format(month, week, follow, following, posts, subs))
+		fb = facebook_return['Facebook Likes']
+		fb = fb.replace(',','')
+		fb = int(fb)
+
+		today = datetime.datetime.now()
+
+		mycursor.execute('INSERT INTO data (date, monthly_sales,weekly_sales,follower_count,following_count,posts,email_subs,facebook_likes) VALUES \
+			("{}","{}","{}","{}","{}","{}","{}","{}");'.format(date, month, week, follow, following, posts, subs, fb))
 		for x in mycursor:
 		  print(x)
 		mydb.commit()
 
 	def DisplayGraphs(instagram_return, amazonseller_return, mailchimp_return):
-        #Line graph of Follower Count -> Following Count -> Posts (compared by date)
-        #Build a pandas df first
-        id = []
-        ms = []
-        ws = []
-        f = []
-        fg = []
-        pt = []
-        el = []  
-        for row in data:
-            id.append(row[0])
-            ms.append(row[1])
-            ws.append(row[2])
-            f.append(row[3])
-            fg.append(row[4])
-            pt.append(row[5])
-            el.append(row[6])   
-        d = {'ID': [id], 'Monthly Sales': [ms], 'Weekly Sales':[ws],'Instagram Follower Count':[f], 'Instagram Following Count':[fg],'Instagram Post Count':[pt],'Email List Subs':[el]}
-        df = pd.DataFrame(data=d)
-        print(df)
-        df.plot(x ='Monthly Sales', y='Weekly Sales', kind = 'bar')
+		#Line graph of Follower Count -> Following Count -> Posts (compared by date)
+		#Build a pandas df first
+		id = []
+		ms = []
+		ws = []
+		f = []
+		fg = []
+		pt = []
+		el = []  
+		for row in data:
+			id.append(row[0])
+			ms.append(row[1])
+			ws.append(row[2])
+			f.append(row[3])
+			fg.append(row[4])
+			pt.append(row[5])
+			el.append(row[6])   
+		d = {'ID': [id], 'Monthly Sales': [ms], 'Weekly Sales':[ws],'Instagram Follower Count':[f], 'Instagram Following Count':[fg],'Instagram Post Count':[pt],'Email List Subs':[el]}
+		df = pd.DataFrame(data=d)
+		print(df)
+		df.plot(x ='Monthly Sales', y='Weekly Sales', kind = 'bar')
 
-    def makeMap(self):
-    	#This function is used to clean data pulled from Amazon seller so that it
-    	#can be imported into a custom Google Map and display the areas where
-    	#most Rhino Wallets were sold.
-    	df = pd.read_csv('2019.csv', encoding = "ISO-8859-1")
-    	states = df['ship-state']
+	def makeMap(self):
+		#This function is used to clean data pulled from Amazon seller so that it
+		#can be imported into a custom Google Map and display the areas where
+		#most Rhino Wallets were sold.
+		df = pd.read_csv('2019.csv', encoding = "ISO-8859-1")
+		states = df['ship-state']
 		clean_list = []
 		state_abbr = {
 		'AL':'Alabama',
@@ -308,16 +315,23 @@ class DataManagement():
 		}
 		#clean
 		for state in states:
-		    for key, val in state_abbr.items():
-		        if(state.lower() == key.lower()):
-		            clean_list.append(val)
-		            print(state,'=',val)
-		            break
+			for key, val in state_abbr.items():
+				if(state.lower() == key.lower()):
+					clean_list.append(val)
+					print(state,'=',val)
+					break
 		#count
 		for state in clean_list:
-		    for check in state_count:
-		        if(state.lower() == check.lower()):
-		            state_count[check] = state_count[check] + 1
+			try:
+				state_count[state] += 1
+			except:
+				pass
+
+
+		# for state in clean_list:
+		# 	for check in state_count:
+		# 		if(state.lower() == check.lower()):
+		# 			state_count[check] = state_count[check] + 1
 
 		return sorted(state_count.items(), key=lambda x: x[1], reverse=True)
 
@@ -326,12 +340,10 @@ class main():
 	bot = ScrapeBot()
 	dash = DataManagement()
 
-	bot.facebook()
-
 	instagram_return = bot.Instagram()
 	amazonseller_return = bot.AmazonSeller()
 	mailchimp_return = bot.MailChimp()
 	facebook_return = bot.facebook()
 
 	dash.InsertDatabase(instagram_return, amazonseller_return, mailchimp_return, facebook_return)
-	dash.makeMap()
+	#dash.makeMap()
